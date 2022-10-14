@@ -1,6 +1,6 @@
 # IosSwipeSearchCompose [![](https://jitpack.io/v/commandiron/swipe-search-compose.svg)](https://jitpack.io/#commandiron/swipe-search-compose)
 
-Add Ios Swipe Search Component in Android Jetpack Compose.
+Add Ios Swipe Search TextField Component in Android Jetpack Compose.
 
 ## How it looks
 
