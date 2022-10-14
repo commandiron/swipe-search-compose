@@ -4,6 +4,9 @@ Add Ios Swipe Search Component in Android Jetpack Compose.
 
 ## How it looks
 
+<img src="https://user-images.githubusercontent.com/50905347/195865007-3c1b2670-d0eb-41ae-9a0d-5757ff63779e.gif" width="250" height="530">
+
+
 ## Usage
 
 ```kotlin
