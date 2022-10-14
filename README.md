@@ -1,4 +1,4 @@
-# IosSwipeSearchCompose
+# IosSwipeSearchCompose [![](https://jitpack.io/v/commandiron/swipe-search-compose.svg)](https://jitpack.io/#commandiron/swipe-search-compose)
 
 Add Ios Swipe Search Component in Android Jetpack Compose.
 
@@ -37,6 +37,6 @@ dependencyResolutionManagement {
 3. Add dependencies
 ```groovy
 dependencies {
-        implementation 'com.github.commandiron:ExpandableHorizontalPagerCompose:1.0.8'
+    implementation 'com.github.commandiron:swipe-search-compose:1.0.0'
 }
 ```
