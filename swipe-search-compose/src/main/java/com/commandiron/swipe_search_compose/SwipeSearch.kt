@@ -5,6 +5,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.*
@@ -20,6 +21,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
@@ -96,8 +99,25 @@ fun SwipeSearch(
     }
 
     val focusManager = LocalFocusManager.current
+
+    val focusRequester = remember { FocusRequester() }
+    val draggableState = rememberDraggableState(
+        onDelta = { delta ->
+            if (delta > 40) {
+                focusRequester.requestFocus()
+            }
+            if (delta < -40) {
+                focusManager.clearFocus()
+            }
+        }
+    )
+
     Box(
         modifier = modifier
+            .draggable(
+                state = draggableState,
+                orientation = Orientation.Vertical
+            )
             .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() }
@@ -134,7 +154,9 @@ fun SwipeSearch(
                     }
                     onValueChange(it.text)
                 },
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier
+                    .padding(16.dp)
+                    .focusRequester(focusRequester),
                 enabled = enabled,
                 readOnly = readOnly,
                 textStyle = TextStyle(
