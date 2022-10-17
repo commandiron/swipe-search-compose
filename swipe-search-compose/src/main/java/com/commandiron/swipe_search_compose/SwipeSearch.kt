@@ -5,7 +5,9 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.*
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.draggable
+import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.*
@@ -55,32 +57,38 @@ fun SwipeSearch(
     containerColor: Color = Color(0xFF8E8E93),
     contentColor: Color = Color(0xFFFFFFFF),
     initialFontSize: TextUnit = 14.sp,
+    targetFontSize: TextUnit = initialFontSize * 1.25f,
     initialWidth: Dp = 94.dp,
+    targetWidth: Dp = Dp.Infinity,
     initialHeight: Dp = 36.dp,
+    targetHeight: Dp = initialHeight * 1.4f,
     placeHolderText: String = "Search"
 ) {
     val textFieldValue = remember { mutableStateOf(TextFieldValue(textValue)) }
 
-    val targetFontSize = remember { mutableStateOf(initialFontSize.value) }
-    val fontSize by animateFloatAsState(
-        targetValue = targetFontSize.value,
+    val fontSizeState = remember { mutableStateOf(initialFontSize.value) }
+    val animatedFontSize by animateFloatAsState(
+        targetValue = fontSizeState.value,
         animationSpec = tween(
             durationMillis = 400
         )
     )
 
-    val targetWidth = remember { mutableStateOf(initialWidth) }
     val maximumWidth = remember { mutableStateOf(initialWidth) }
-    val width by animateDpAsState(
-        targetValue = targetWidth.value,
+
+    val widthState = remember { mutableStateOf(initialWidth) }
+    val animatedWidth by animateDpAsState(
+        targetValue = widthState.value,
         animationSpec = tween(
             durationMillis = 400
         )
     )
 
-    val targetHeight = remember { mutableStateOf(initialHeight) }
-    val height by animateDpAsState(
-        targetValue = targetHeight.value,
+    val maximumHeight = remember { mutableStateOf(initialWidth) }
+
+    val heightState = remember { mutableStateOf(initialHeight) }
+    val animatedHeight by animateDpAsState(
+        targetValue = heightState.value,
         animationSpec = tween(
             durationMillis = 400
         )
@@ -88,14 +96,20 @@ fun SwipeSearch(
     val isFocused = interactionSource.collectIsFocusedAsState().value
     DisposableEffect(isFocused){
         if(isFocused) {
-            targetFontSize.value = initialFontSize.value * 1.25f
-            targetWidth.value = maximumWidth.value
-            targetHeight.value = initialHeight * 1.4f
+            fontSizeState.value = targetFontSize.value
+
+            widthState.value = if(targetWidth == Dp.Infinity || targetWidth == Dp.Unspecified) {
+                maximumWidth.value
+            } else targetWidth
+
+            heightState.value = if(targetHeight == Dp.Infinity || targetHeight == Dp.Unspecified) {
+                maximumHeight.value
+            } else targetHeight
         }
         onDispose {
-            targetFontSize.value = initialFontSize.value
-            targetWidth.value = initialWidth
-            targetHeight.value = initialHeight
+            fontSizeState.value = initialFontSize.value
+            widthState.value = initialWidth
+            heightState.value = initialHeight
         }
     }
 
@@ -139,6 +153,7 @@ fun SwipeSearch(
             contentAlignment = Alignment.Center
         ) {
             maximumWidth.value = maxWidth
+            maximumHeight.value = maxHeight
             BasicTextField(
                 value = textFieldValue.value,
                 onValueChange = {
@@ -164,7 +179,7 @@ fun SwipeSearch(
                 readOnly = readOnly,
                 textStyle = TextStyle(
                     color = contentColor,
-                    fontSize = fontSize.sp
+                    fontSize = animatedFontSize.sp
                 ),
                 keyboardOptions = keyboardOptions,
                 keyboardActions = keyboardActions,
@@ -182,18 +197,18 @@ fun SwipeSearch(
                 decorationBox = { innerTextField ->
                     Row(
                         modifier = Modifier
-                            .width(width)
-                            .height(height)
+                            .width(animatedWidth)
+                            .height(animatedHeight)
                             .clip(CircleShape)
                             .background(containerColor)
                     ) {
                         Box(Modifier.align(Alignment.CenterVertically), Alignment.CenterStart) {
                             Icon(
                                 modifier = Modifier
-                                    .height(height / 2)
+                                    .height(animatedHeight / 2)
                                     .padding(
                                         start = 12.dp,
-                                        end = height / 8
+                                        end = animatedHeight / 8
                                     ),
                                 imageVector = Icons.Default.Search,
                                 contentDescription = null,
@@ -206,7 +221,7 @@ fun SwipeSearch(
                                 Text(
                                     text = placeHolderText,
                                     color = contentColor,
-                                    fontSize = fontSize.sp
+                                    fontSize = animatedFontSize.sp
                                 )
                             }
                         } else {
@@ -217,7 +232,7 @@ fun SwipeSearch(
                                     Text(
                                         text = placeHolderText,
                                         color = contentColor,
-                                        fontSize = fontSize.sp
+                                        fontSize = animatedFontSize.sp
                                     )
                                 }
                             }
