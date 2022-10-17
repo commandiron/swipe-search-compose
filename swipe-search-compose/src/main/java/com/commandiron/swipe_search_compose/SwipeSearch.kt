@@ -51,11 +51,12 @@ fun SwipeSearch(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     onTextLayout: (TextLayoutResult) -> Unit = {},
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    bgColor: Color = Color(0xFFF0F0F3),
     containerColor: Color = Color(0xFF8E8E93),
     contentColor: Color = Color(0xFFFFFFFF),
     initialFontSize: TextUnit = 14.sp,
     initialWidth: Dp = 94.dp,
-    initialHeight: Dp = 30.dp,
+    initialHeight: Dp = 36.dp,
     placeHolderText: String = "Search"
 ) {
     val textFieldValue = remember { mutableStateOf(TextFieldValue(textValue)) }
@@ -89,7 +90,7 @@ fun SwipeSearch(
         if(isFocused) {
             targetFontSize.value = initialFontSize.value * 1.25f
             targetWidth.value = maximumWidth.value
-            targetHeight.value = initialHeight * 1.5f
+            targetHeight.value = initialHeight * 1.4f
         }
         onDispose {
             targetFontSize.value = initialFontSize.value
@@ -129,9 +130,11 @@ fun SwipeSearch(
         BoxWithConstraints(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(if (isFocused) {
-                    Color(0xFFF0F0F3)
-                } else Color.Unspecified)
+                .background(
+                    if (isFocused) {
+                        bgColor
+                    } else Color.Unspecified
+                )
             ,
             contentAlignment = Alignment.Center
         ) {
