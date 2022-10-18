@@ -60,8 +60,8 @@ fun SwipeSearch(
     targetFontSize: TextUnit = initialFontSize * 1.25f,
     initialWidth: Dp = 94.dp,
     targetWidth: Dp = Dp.Infinity,
-    initialHeight: Dp = 36.dp,
-    targetHeight: Dp = initialHeight * 1.4f,
+    initialHeight: Dp = 40.dp,
+    targetHeight: Dp = initialHeight * 1.2f,
     placeHolderText: String = "Search"
 ) {
     val textFieldValue = remember { mutableStateOf(TextFieldValue(textValue)) }
